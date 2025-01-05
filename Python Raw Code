@@ -1,0 +1,114 @@
+#Raw Code 
+# This is the main menu prompt, we can call back to this later using showInstructions()
+def showInstructions():
+    print(
+        'Theseus you have come far through the labyrinth all that is left to do is face the beast! However, you need to new equipment to do so! ')
+    print('Venture into the absurd find the six items and face The Mighty Minotaur!')
+    print('Your input commands are as follows-')
+    print('Directions: Go North, Go South, Go East, Go West')
+    print('Get item: Grab "item_name"')
+    print('Quit game: Exit')
+    print('-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-')
+
+
+# For some reason the dictionary kept giving me an issue when trying to set it lower in the program.
+rooms = {
+    'Minotaurs Hall': {'Go South': 'Storage Room', 'Go North': 'Frisbee Gym', 'Go East': 'Entry Way', 'Go West': 'Home Office'},
+    'Storage Room': {'Go North': 'Minotaurs Hall', 'Go East': 'Wine Cellar', 'Item': 'Breastplate'},
+    'Wine Cellar': {'Go West': 'Storage Room', 'Item': 'Helm'},
+    'Home Office': {'Go East': 'Minotaurs Hall', 'Item': 'Tax Forms'},
+    'Frisbee Gym': {'Go South': 'Minotaurs Hall', 'Go East': 'Supply Closet', 'Item': 'Shield'},
+    'Supply Closet': {'Go West': 'Frisbee Gym', 'Item': 'Sword'},
+    'Entry Way': {'Go North': 'Tea Room', 'Go West': 'Minotaurs Hall', 'Item': 'Nike Sandals'},
+    'Tea Room': {'Go South': 'Entry Way', 'Item': 'Mighty Minotaur!'}
+}
+
+
+def get_new_status(status, direction):
+    new_status = status
+    for i in rooms:
+        if i == status:
+            if direction in rooms[status]:
+                new_status = str(rooms[status][direction])
+
+
+    return new_status
+
+items = {
+        'Wine Cellar': 'Breastplate',
+        'Storage Room': 'Helm',
+        'Supply Closet': 'Sword',
+        'Frisbee Gym': 'Shield',
+        'Home Office': 'Tax Forms',
+        'Entry Way': 'Nike Sandals',
+        'Tea Room': 'Mighty Minotaur!'
+    }
+
+# Set up for the game start
+showInstructions()
+status = 'Minotaurs Hall'
+inventory = []
+
+
+# This is the start of the main gameplay loop.
+while (1):
+    print('-----------------------------------------------------------------------------------')
+    print('You find yourself in the ',status)  # Shows current player status
+    print('Current inventory:', inventory)
+
+       # Set up for the item to show in the room
+    if 'Item' in rooms[status] and rooms[status]['Item'] not in inventory:
+        print('You see the ' + rooms[status]['Item'])
+
+    direction = input('What would you like to do? ').title()  # This is the default prompt for player input when entering a room.#
+
+    if (direction == 'Exit'):
+        exit(0)
+
+
+
+    if (direction == 'Go North' or direction == 'Go South' or direction == 'Go East' or direction == 'Go West'):
+        new_status = get_new_status(status, direction)
+        if new_status == status:
+            print('You find a dead end in this direction, try another!')
+            print('--------------------------------------------------------------------------------')
+            # This is for when the player inputs an invalid directional command
+        else:
+            status = new_status
+    # This should print when the player inputs a fully invalid command
+
+    #elif direction != 'Go North' or direction == 'Go South' or direction == 'Go East' or direction == 'Go West':
+        #print('That is not a valid option at this time, please try again when the developer is feeling less lazy')
+        #print('-------------------------------------------------------------------------------------')
+
+
+    elif direction == str('Grab '+rooms[status]['Item']):
+        if rooms[status]['Item'] in inventory:
+            print('You have already gotten the important item from this room, keep exploring!')
+            print('--------------------------------------------------------------------------------')
+            #This is for when users have already grabbed the item from this room
+        elif rooms[status]['Item'] not in inventory:
+            inventory.append(rooms[status]['Item'])
+            print('You got the '+ str(rooms[status]['Item'])+'!')
+            print('--------------------------------------------------------------------------------')
+    else:
+        print('That is not a valid option at this time, please try again when the developer is feeling less lazy')
+        print('-------------------------------------------------------------------------------------')
+
+    # This is the loss conditional
+    if len(inventory) != 6 and status == 'Tea Room':
+        print('****************************************************')
+        print('You face down The Might Minotaur unprepared!')
+        print('He hurls insults that make you recoil!')
+        print('You walk away holding back tears defeated.')
+        print('Game Over...')
+        exit(0)
+        # This is the win conditional
+    if len(inventory) == 6 and status == 'Tea Room':
+        print('****************************************************')
+        print('You face down The Mighty Minotaur and show him how he has fallen apart!')
+        print('You sit down and discuss how he can pull himself together over tea!')
+        print('You help The Mighty Minotaur slay his inner demons and make a friend for life!')
+        print('You also get a cool sword to put on your wall! Thanks for playing! ')
+        exit(0)
+
